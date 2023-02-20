@@ -1,6 +1,6 @@
 # Discourse-donation-icon-toggle
 
-The component only shows or hide a button added with https://meta.discourse.org/t/custom-header-links-icons/86307?u=canapin.
+The component only shows or hide fo 1 year a button added with https://meta.discourse.org/t/custom-header-links-icons/86307?u=canapin using a cookie.
 
 It needs to be forked for your own purpose, it won't work out of the shelf.
 
