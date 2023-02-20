@@ -1,0 +1,76 @@
+<script type="text/discourse-plugin" version="0.8">
+    // set the cookie duration to 1 year
+    function setHideDonationCookie(value=null) {
+        var now = new Date();
+        var time = now.getTime();
+        var expireTime = time + 1000*60*60*24*365;
+        now.setTime(expireTime);
+        document.cookie = 'donationButton=' + value + ';expires='+now.toUTCString()+';path=/';
+    }
+    // return the cookie value
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        }
+        else
+        {
+            begin += 2;
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+            end = dc.length;
+            }
+        }
+        return decodeURI(dc.substring(begin + prefix.length, end));
+    } 
+
+function getToggleDonationIcon() {
+  let pref = getCookie('donationButton');
+
+  let result = settings.default_enabled;
+  if (pref !== null) {
+    result = pref === "true";
+  }
+  return result;
+}
+
+if (getToggleDonationIcon()) {
+  let style = document.createElement('style');
+  style.innerHTML = ".header-icon-help-fund-servers-fees{ display: none; }";
+  document.head.appendChild(style);
+}
+
+// technically we only want to amend current user here
+api.modifyClass("model:user", {
+  pluginId: "disable-donation-icon",
+  toggleDonationIcon: function() {
+    return getToggleDonationIcon();
+  }.property()
+});
+
+api.modifyClass("controller:preferences/interface", {
+  pluginId: "disable-donation-icon",
+  actions: {
+    save() {
+      this._super();
+      // set the cookie value as the setting value
+      if(this.get("model.toggleDonationIcon") != getToggleDonationIcon()) {
+        setHideDonationCookie(this.get("model.toggleDonationIcon").toString());
+        if(this.get("model.toggleDonationIcon") == false) {
+            document.getElementsByClassName("header-icon-help-fund-servers-fees")[0].style.display = "";
+        }
+        else {
+            document.getElementsByClassName("header-icon-help-fund-servers-fees")[0].style.display = "none";
+        }
+      }
+    }
+  }
+});
+</script>
+
+<script type='text/x-handlebars' data-template-name='/connectors/user-preferences-interface/add-selector'>
+  {{preference-checkbox labelKey=(theme-prefix 'donation_icon_toggle') checked=model.toggleDonationIcon}} 
+</script>
