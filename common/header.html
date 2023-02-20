@@ -39,7 +39,7 @@ function getToggleDonationIcon() {
 
 if (getToggleDonationIcon()) {
   let style = document.createElement('style');
-  style.innerHTML = ".header-icon-help-fund-servers-fees{ display: none; }";
+  style.innerHTML = ".header-icon-unterstützung-und-spenden{ display: none; }";
   document.head.appendChild(style);
 }
 
@@ -60,10 +60,10 @@ api.modifyClass("controller:preferences/interface", {
       if(this.get("model.toggleDonationIcon") != getToggleDonationIcon()) {
         setHideDonationCookie(this.get("model.toggleDonationIcon").toString());
         if(this.get("model.toggleDonationIcon") == false) {
-            document.getElementsByClassName("header-icon-help-fund-servers-fees")[0].style.display = "";
+            document.getElementsByClassName("header-icon-unterstützung-und-spenden")[0].style.display = "";
         }
         else {
-            document.getElementsByClassName("header-icon-help-fund-servers-fees")[0].style.display = "none";
+            document.getElementsByClassName("header-icon-unterstützung-und-spenden")[0].style.display = "none";
         }
       }
     }
